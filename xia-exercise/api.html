@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html ng-app="MyApp">
+    <head>
+        <title>接口API</title>
+        <meta charset="UTF-8"/>
+    </head>
+    <body ng-controller="apiController">
+        <input type="text" ng-model="user.name"  placeholder="请输入姓名"/>
+        <input type="text" ng-model="user.hobby"  placeholder="请输入爱好"/>
+        <input type="text" ng-model="user.age"  placeholder="请输入年龄"/>
+        <h6>我是服务器返回的：{{serverRes}}</h6>
+        <button ng-click="sendServer()">点我发送给服务器</button>
+        <script src="./js/angular.js"></script>
+        <script>
+            angular.module('MyApp',[])
+                .controller('apiController',function($scope,$http){
+                    $scope.user={
+                        name:'',
+                        hobby:'',
+                        age:''
+                    }
+                    $scope.serverRes='';
+                    $scope.sendServer=function(){
+                        var postdata='name='+$scope.user.name+'&hobby='+$scope.user.hobby+'&age='+$scope.user.age;
+                        console.log(postdata);
+                        $http({
+                            //method: 'GET',
+                            //url: '../hello/?'+postdata,
+                            method:'POST',
+                            url:'../hello/',
+                            data:postdata,//序列化用户输入的数据
+                            headers:{ 'Content-Type': 'application/x-www-form-urlencoded' } 
+                        }).success(function(response){
+                            console.log(response);
+                            $scope.serverRes=decodeURIComponent(response);
+                            console.log('我请求成功了');
+                        });
+                    };
+                });
+        </script>
+    </body>
+</html>
